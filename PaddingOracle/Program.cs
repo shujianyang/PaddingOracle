@@ -16,39 +16,37 @@ namespace PaddingOracle
             //Pad p = new Pad(cipherText);
             //int rr = p.getResponseCode();
             //Console.WriteLine("Response code: {0}", rr);
-            
+
             Oracle ora = new Oracle(cipherText);
-            Console.WriteLine(ora.getCipherText(1));
+            Console.WriteLine(ora.getCipherText());
 
-            for (int last = 1; last < 4; last++)
+
+            for (int guessLength = 1; guessLength <= ora.getCipherTextSize(); guessLength++)
             {
-                for (int guessLength = 1; guessLength < 17; guessLength++)
+                Console.WriteLine("Guessing length {0}: ", guessLength);
+
+                for (int oneGuess = 0; oneGuess < 256; oneGuess++)
                 {
-                    Console.WriteLine("Guessing length {0} in last {1} block: ", guessLength, last);
+                    //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
+                    ora.guessByte(oneGuess, guessLength);
+                    //Console.WriteLine(ora.getCipherText());
 
-                    for (int oneGuess = 0; oneGuess < 256; oneGuess++)
+                    Pad tryPad = new Pad(ora.getCipherText());
+
+                    int r = tryPad.getResponseCode();
+
+                    //Console.WriteLine("Response code: {0}\n", r);
+
+                    if (r != 403)
                     {
-                        //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
-                        ora.guessByte(oneGuess, last, guessLength);
-                        //Console.WriteLine(ora.getCipherText());
-
-                        Pad tryPad = new Pad(ora.getCipherText(last));
-
-                        int r = tryPad.getResponseCode();
-
-                        //Console.WriteLine("Response code: {0}\n", r);
-
-                        if (r != 403)
-                        {
-                            if (r == 200 && guessLength == 1)
-                                continue;
-                            Console.WriteLine("Correct guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
-                            ora.addPlainText(oneGuess);
-                            Console.WriteLine("Plain text: " + ora.getPlainText() + '\n');
-                            break;
-                        }
+                        if (r == 200 && guessLength == 1)
+                            continue;
+                        Console.WriteLine("Correct guess {0} of length {1}: ", oneGuess, guessLength);
+                        ora.addPlainText(oneGuess);
+                        Console.WriteLine("Plain text: " + ora.getPlainText() + '\n');
+                        break;
                     }
-                } 
+                }
             }
 
             ora.reversePlainText();
