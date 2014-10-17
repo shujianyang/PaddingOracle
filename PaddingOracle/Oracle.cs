@@ -10,7 +10,7 @@ namespace PaddingOracle
     {
         public Oracle(string cipher)
         {
-            cipherText = new List<List<byte>>();
+            cipherText = new List<byte>();
             plainText = new List<byte>();
             //plainText = new List<List<byte>>();
 
@@ -19,7 +19,7 @@ namespace PaddingOracle
             for(int i = 0; i < cipher.Length; i+=2)
             {
                 string val = cipher.Substring(i, 2);
-                blockData.Add(Byte.Parse(val, System.Globalization.NumberStyles.HexNumber));
+                cipherText.Add(Byte.Parse(val, System.Globalization.NumberStyles.HexNumber));
                 if ((i + 2) / 2 % BLOCK_SIZE == 0)
                 {
                     cipherText.Add(blockData);
@@ -98,7 +98,7 @@ namespace PaddingOracle
         //}
 
         public static int BLOCK_SIZE = 16;
-        private List<List<byte>> cipherText;
+        private List<byte> cipherText;
         private List<byte> plainText;
     }
 }
