@@ -44,7 +44,7 @@ namespace PaddingOracle
         {
             string hex = "";
             foreach (byte b in plainText)
-                hex += String.Format("{0:x2}", b);
+                hex += String.Format("{0:x2} ", b);
             //hex += '\n';
             return hex;
         }
