@@ -1,4 +1,10 @@
-﻿using System;
+﻿//=============================================
+//Author: Shujian Yang
+//Organization: University of Central Oklahoma
+//Note: Main program
+//=============================================
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,50 +18,46 @@ namespace PaddingOracle
         static void Main(string[] args)
         {
             string cipherText = "f20bdba6ff29eed7b046d1df9fb7000058b1ffb4210a580f748b4ac714c001bd4a61044426fb515dad3f21f18aa577c0bdf302936266926ff37dbf7035d5eeb4";
-
-            //Pad p = new Pad(cipherText);
-            //int rr = p.getResponseCode();
-            //Console.WriteLine("Response code: {0}", rr);
             
             Oracle ora = new Oracle(cipherText);
             Console.WriteLine(ora.getModifiedCipherText());
 
-            for (int last = 1; last < 4; last++)
+            int initBlockCount = ora.getBlockCount();
+
+            for (int currentBlock = 1; currentBlock < initBlockCount; currentBlock++)
             {
-                for (int guessLength = 1; guessLength < 17; guessLength++)
+                for (int guessByte = 1; guessByte < 17; guessByte++)
                 {
-                    Console.WriteLine("Guessing length {0} in last {1} block: ", guessLength, last);
+                    Console.WriteLine("Guessing byte {0} in block {1}...", Oracle.BLOCK_SIZE - guessByte, ora.getBlockCount() - 1);
 
                     for (int oneGuess = 0; oneGuess < 256; oneGuess++)
                     {
-                        //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
-                        ora.guessByte(oneGuess, guessLength);
-                        //if(oneGuess == 0) Console.WriteLine(ora.getModifiedCipherText());
+                        ora.guessByte(oneGuess, guessByte);
 
                         Pad tryPad = new Pad(ora.getModifiedCipherText());
 
                         int r = tryPad.getResponseCode();
 
-                        //Console.WriteLine("Response code: {0}\n", r);
-
                         if (r != 403)
                         {
-                            if (r == 200 && last == 1 && guessLength == 1)
-                                continue;
-                            Console.WriteLine("Correct guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
+                            if (r == 200 && currentBlock == 1 && guessByte == 1)
+                                continue; //This guess results in original cipher text, which is acceptable by server.
+                            Console.WriteLine("Correct guess of byte {0} in block {1}: {2}", 
+                                Oracle.BLOCK_SIZE - guessByte, ora.getBlockCount() - 1, oneGuess);
                             ora.addPlainText(oneGuess);
-                            Console.WriteLine("Plain text: " + ora.getPlainText() + '\n');
+                            Console.WriteLine("Plain text (reversed): " + ora.getPlainText() + '\n');
                             break;
                         }
                     }
                 }
-                ora.resetCipher(last);
+                ora.resetCipher(currentBlock);
             }
 
             ora.reversePlainText();
-            Console.WriteLine(ora.getPlainText().Length);
+            Console.WriteLine("Decryption completed.");
+            Console.WriteLine("Decrypted plaintext in hex:");
             Console.WriteLine(ora.getPlainText());
-            Console.WriteLine(ora.getPlainTextInChar().Length);
+            Console.WriteLine("Decrypted plaintext in char:");
             Console.WriteLine(ora.getPlainTextInChar());
         }
     }

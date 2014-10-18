@@ -1,4 +1,10 @@
-﻿using System;
+﻿//=============================================
+//Author: Shujian Yang
+//Organization: University of Central Oklahoma
+//Note: This class is used to send request to target server and obtain responded status code.
+//=============================================
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -27,8 +33,8 @@ namespace PaddingOracle
             {
                 HttpWebResponse response = (HttpWebResponse)we.Response;
                 int code = (int)response.StatusCode;
-                string m= "";
-                m = m + "Message: " + we.Message + "\n";
+                //string m= "";
+                //m = m + "Message: " + we.Message + "\n";
                 //m = m + "Code: " + code + "\n";
                 //m = m + "Code: " + (int)response.StatusCode + "\n";
                 //m = m + "Status: " + we.Status ;
