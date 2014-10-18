@@ -18,11 +18,10 @@ namespace PaddingOracle
             //Console.WriteLine("Response code: {0}", rr);
             
             Oracle ora = new Oracle(cipherText);
-            Console.WriteLine(ora.getModifiedCipherText(1));
+            Console.WriteLine(ora.getModifiedCipherText());
 
             for (int last = 1; last < 4; last++)
             {
-                ora.resetCipher();
                 for (int guessLength = 1; guessLength < 17; guessLength++)
                 {
                     Console.WriteLine("Guessing length {0} in last {1} block: ", guessLength, last);
@@ -30,10 +29,10 @@ namespace PaddingOracle
                     for (int oneGuess = 0; oneGuess < 256; oneGuess++)
                     {
                         //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
-                        ora.guessByte(oneGuess, last, guessLength);
-                        if(oneGuess == 0) Console.WriteLine(ora.getModifiedCipherText(last));
+                        ora.guessByte(oneGuess, guessLength);
+                        if(oneGuess == 0) Console.WriteLine(ora.getModifiedCipherText());
 
-                        Pad tryPad = new Pad(ora.getModifiedCipherText(last));
+                        Pad tryPad = new Pad(ora.getModifiedCipherText());
 
                         int r = tryPad.getResponseCode();
 
@@ -49,7 +48,8 @@ namespace PaddingOracle
                             break;
                         }
                     }
-                } 
+                }
+                ora.resetCipher(last);
             }
 
             ora.reversePlainText();

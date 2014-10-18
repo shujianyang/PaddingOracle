@@ -28,14 +28,15 @@ namespace PaddingOracle
                     blockData = new List<byte>();
                 }
             }
+            Console.WriteLine("Cipher size: {0}", cipher.Count);
         }
 
-        public void resetCipher()
+        public void resetCipher(int block)
         {
             cipher = new List<List<byte>>();
             List<byte> blockData = new List<byte>();
 
-            for (int i = 0; i < cipherText.Length; i += 2)
+            for (int i = 0; i < cipherText.Length - block * BLOCK_SIZE * 2; i += 2)
             {
                 string val = cipherText.Substring(i, 2);
                 blockData.Add(Byte.Parse(val, System.Globalization.NumberStyles.HexNumber));
@@ -45,14 +46,15 @@ namespace PaddingOracle
                     blockData = new List<byte>();
                 }
             }
+            Console.WriteLine("Cipher size: {0}", cipher.Count);
         }
 
-        public string getModifiedCipherText(int lastBlock)
+        public string getModifiedCipherText()
         {
             string hex = "";
-            for (int i = 0; i <= cipher.Count - lastBlock; ++i)
+            foreach(List<byte> bl in cipher)
             {
-                foreach (byte b in cipher[i])
+                foreach (byte b in bl)
                     hex += String.Format("{0:x2}", b);
                 //hex += '\n';
             }
@@ -77,10 +79,9 @@ namespace PaddingOracle
             return hex;
         }
 
-        public void guessByte(int guess, int lastNBlock, int length)
+        public void guessByte(int guess, int length)
         {
-            List<byte> currentBlock = cipher[cipher.Count - lastNBlock - 1];
-            //Console.WriteLine("\n======{0:x2} ", currentBlock[currentBlock.Count - 1]);
+            List<byte> currentBlock = cipher[cipher.Count - 2];
             int delta;
             if (guess == 0)
                 delta = guess ^ length;
