@@ -27,7 +27,7 @@ namespace PaddingOracle
 
                 for (int oneGuess = 0; oneGuess < 256; oneGuess++)
                 {
-                    //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
+                    //Console.WriteLine("Guess {0} of length {1}: ", oneGuess, guessLength);
                     ora.guessByte(oneGuess, guessLength);
                     //Console.WriteLine(ora.getCipherText());
 
@@ -39,6 +39,7 @@ namespace PaddingOracle
 
                     if (r != 403)
                     {
+                        //Console.WriteLine("Response code: {0}\n", r);
                         if (r == 200 && guessLength == 1)
                             continue;
                         Console.WriteLine("Correct guess {0} of length {1}: ", oneGuess, guessLength);
