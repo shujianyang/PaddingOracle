@@ -8,32 +8,51 @@ namespace PaddingOracle
 {
     class Oracle
     {
-        public Oracle(string cipher)
+        public Oracle(string cipherString)
         {
-            cipherText = new List<List<byte>>();
+            cipherText = cipherString;
+
+            cipher = new List<List<byte>>();
             plainText = new List<byte>();
             //plainText = new List<List<byte>>();
 
             List<byte> blockData = new List<byte>();
 
-            for(int i = 0; i < cipher.Length; i+=2)
+            for (int i = 0; i < cipherText.Length; i += 2)
             {
-                string val = cipher.Substring(i, 2);
+                string val = cipherText.Substring(i, 2);
                 blockData.Add(Byte.Parse(val, System.Globalization.NumberStyles.HexNumber));
                 if ((i + 2) / 2 % BLOCK_SIZE == 0)
                 {
-                    cipherText.Add(blockData);
+                    cipher.Add(blockData);
                     blockData = new List<byte>();
                 }
             }
         }
 
-        public string getCipherText(int lastBlock)
+        public void resetCipher()
+        {
+            cipher = new List<List<byte>>();
+            List<byte> blockData = new List<byte>();
+
+            for (int i = 0; i < cipherText.Length; i += 2)
+            {
+                string val = cipherText.Substring(i, 2);
+                blockData.Add(Byte.Parse(val, System.Globalization.NumberStyles.HexNumber));
+                if ((i + 2) / 2 % BLOCK_SIZE == 0)
+                {
+                    cipher.Add(blockData);
+                    blockData = new List<byte>();
+                }
+            }
+        }
+
+        public string getModifiedCipherText(int lastBlock)
         {
             string hex = "";
-            for (int i = 0; i <= cipherText.Count - lastBlock; ++i)
+            for (int i = 0; i <= cipher.Count - lastBlock; ++i)
             {
-                foreach (byte b in cipherText[i])
+                foreach (byte b in cipher[i])
                     hex += String.Format("{0:x2}", b);
                 //hex += '\n';
             }
@@ -60,7 +79,7 @@ namespace PaddingOracle
 
         public void guessByte(int guess, int lastNBlock, int length)
         {
-            List<byte> currentBlock = cipherText[cipherText.Count - lastNBlock - 1];
+            List<byte> currentBlock = cipher[cipher.Count - lastNBlock - 1];
             //Console.WriteLine("\n======{0:x2} ", currentBlock[currentBlock.Count - 1]);
             int delta;
             if (guess == 0)
@@ -98,7 +117,8 @@ namespace PaddingOracle
         //}
 
         public static int BLOCK_SIZE = 16;
-        private List<List<byte>> cipherText;
+        private string cipherText;
+        private List<List<byte>> cipher;
         private List<byte> plainText;
     }
 }
