@@ -46,7 +46,7 @@ namespace PaddingOracle
                     blockData = new List<byte>();
                 }
             }
-            Console.WriteLine("Cipher size: {0}", cipher.Count);
+            //Console.WriteLine("Cipher size: {0}", cipher.Count);
         }
 
         public string getModifiedCipherText()
@@ -108,14 +108,6 @@ namespace PaddingOracle
         {
             plainText.Reverse();
         }
-
-        //public void obtainByte(int guess, int lastNBlock, int length)
-        //{
-        //    List<byte> currentBlock = plainText[plainText.Count - lastNBlock - 1];
-        //    //Console.WriteLine("\n======{0:x2} ", currentBlock[currentBlock.Count - 1]);
-        //    int delta = guess ^ length;
-        //    currentBlock[currentBlock.Count - 1] ^= (byte)delta;
-        //}
 
         public static int BLOCK_SIZE = 16;
         private string cipherText;

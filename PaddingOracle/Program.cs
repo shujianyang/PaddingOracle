@@ -30,7 +30,7 @@ namespace PaddingOracle
                     {
                         //Console.WriteLine("Guess {0} of length {1} in last {2} block: ", oneGuess, guessLength, last);
                         ora.guessByte(oneGuess, guessLength);
-                        if(oneGuess == 0) Console.WriteLine(ora.getModifiedCipherText());
+                        //if(oneGuess == 0) Console.WriteLine(ora.getModifiedCipherText());
 
                         Pad tryPad = new Pad(ora.getModifiedCipherText());
 
