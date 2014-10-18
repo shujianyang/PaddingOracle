@@ -13,15 +13,15 @@ namespace PaddingOracle
         {
             string cipherText = "f20bdba6ff29eed7b046d1df9fb7000058b1ffb4210a580f748b4ac714c001bd4a61044426fb515dad3f21f18aa577c0bdf302936266926ff37dbf7035d5eeb4";
 
-            //Pad p = new Pad(cipherText);
-            //int rr = p.getResponseCode();
-            //Console.WriteLine("Response code: {0}", rr);
+            Pad p = new Pad(cipherText);
+            int rr = p.getResponseCode();
+            Console.WriteLine("Response code: {0}", rr);
 
             Oracle ora = new Oracle(cipherText);
             Console.WriteLine(ora.getCipherText());
 
 
-            for (int guessLength = 1; guessLength <= ora.getCipherTextSize(); guessLength++)
+            for (int guessLength = 1; guessLength <= ora.getCipherTextSize() - Oracle.BLOCK_SIZE; guessLength++)
             {
                 Console.WriteLine("Guessing length {0}: ", guessLength);
 

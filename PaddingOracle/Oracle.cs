@@ -61,14 +61,14 @@ namespace PaddingOracle
                 delta = guess ^ length;
             else
                 delta = (guess - 1) ^ guess;
-            cipherText[cipherText.Count - length] ^= (byte)delta;
+            cipherText[cipherText.Count - length - BLOCK_SIZE] ^= (byte)delta;
 
             if (guess == 0)
             {
                 for (int i = 1; i < length; i++)
                 {
                     int c = (length - 1) ^ length;
-                    cipherText[cipherText.Count - i] ^= (byte)(c);
+                    cipherText[cipherText.Count - i - BLOCK_SIZE] ^= (byte)(c);
                 } 
             }
         }
@@ -91,7 +91,7 @@ namespace PaddingOracle
         //    currentBlock[currentBlock.Count - 1] ^= (byte)delta;
         //}
 
-        //public static int BLOCK_SIZE = 16;
+        public static int BLOCK_SIZE = 16;
         private List<byte> cipherText;
         private List<byte> plainText;
     }
